@@ -7,6 +7,8 @@ function DeckScreen({player, startBattle}){
     const [length, setLength] = useState(1);
     const [vertical, setVertical] = useState(false);
     const [greenHighLight, setGreenHighLight] = useState([]);
+    const [aroundHighLight, setAroundHighLight] = useState([]);
+    const [error, setError] = useState(false);
     const mapWidth = player.board.mapx; 
 
     const handleChangeType = (type) => {
@@ -14,26 +16,53 @@ function DeckScreen({player, startBattle}){
     }
 
     const handlePlaceShip = (x,y) => {
-        console.log(length,x,y,vertical)
+        console.log(length,x,y,vertical, error);
     }
 
     const handleGreenLight = (x, y, mode) => {
         if(mode){
-            const array = [];
+            const arrayGreen = [];
             if(vertical){
                 for(let i = 0 ; i < length ; i++){
-                    array.push([x,y+i]);
+                    arrayGreen.push([x,y+i]);
+                    if(y+i >= player.board.mapy || x > player.board.mapx){
+                        setError(true);
+                    }
                 }
             }
             else {
                 for(let i = 0 ; i < length ; i++){
-                    array.push([x+i,y]);
+                    arrayGreen.push([x+i,y]);
+                    if(x+i >= player.board.mapx || y > player.board.mapy){
+                        setError(true);
+                    }
                 }
             }
-            setGreenHighLight(array);
+            const adjacentCells = [];
+            for (const [shipX, shipY] of arrayGreen) {
+                const surroundingCoords = [
+                    [shipX, shipY - 1], // Up
+                    [shipX, shipY + 1], // Down
+                    [shipX - 1, shipY], // Left
+                    [shipX + 1, shipY], // Right
+                    [shipX - 1, shipY - 1], // Up - Left
+                    [shipX + 1, shipY - 1], // Up - Right
+                    [shipX - 1, shipY + 1], // Down - Left
+                    [shipX + 1, shipY + 1], // Down - Right
+                ];
+                for (const coord of surroundingCoords) {
+                    if (!arrayGreen.some(existingCoord => existingCoord[0] === coord[0] && existingCoord[1] === coord[1])) {
+                        adjacentCells.push([coord[0], coord[1]]); 
+                    }
+                }
+            }
+            setAroundHighLight(adjacentCells);
+            setGreenHighLight(arrayGreen);
         }
         if(!mode){
             setGreenHighLight([]);
+            setAroundHighLight([]);
+            setError(false);
         }
     }
 
@@ -45,7 +74,7 @@ function DeckScreen({player, startBattle}){
                     const x = index % mapWidth; 
                     const y = Math.floor(index / mapWidth); 
 
-                    return <Cell key={index} x={x} y={y} placeShip={handlePlaceShip} greenLight={greenHighLight} changeGreenLight={handleGreenLight}/>;
+                    return <Cell key={index} x={x} y={y} placeShip={handlePlaceShip} greenLight={greenHighLight} greyLight={aroundHighLight} changeGreenLight={handleGreenLight} colorError={error}/>;
                 })}
             </div>
             <div className="deck-types">

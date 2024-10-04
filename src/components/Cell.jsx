@@ -2,15 +2,20 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import '../assets/css/Cell.css'
 
-function Cell({x,y,placeShip, greenLight, changeGreenLight}){
+function Cell({x,y,placeShip, greenLight, greyLight, changeGreenLight, colorError}){
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'none' });
 
     useEffect(() => {
         const isGreen = greenLight.some(coords => coords[0] === x && coords[1] === y);
-        
-        if (isGreen) {
+        const isGrey = greyLight.some(coords => coords[0] === x && coords[1] === y);
+        if (colorError && isGreen){
+            setHoverStyle({ backgroundColor: 'red' })
+        } else if (isGrey) {
+            setHoverStyle({ backgroundColor: 'lightgrey' });
+        } else if(isGreen){
             setHoverStyle({ backgroundColor: 'green' });
-        } else {
+        }
+        else {
             setHoverStyle({ backgroundColor: 'white' });
         }
         
@@ -41,10 +46,6 @@ Cell.propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
     placeShip: PropTypes.func.isRequired, 
-    // greenHighLight: PropTypes.arrayOf( 
-    //   PropTypes.arrayOf(PropTypes.number.isRequired).isRequired
-    // ),
-    // onHover: PropTypes.func, 
 };
 
 export default Cell
