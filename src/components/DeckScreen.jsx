@@ -1,45 +1,60 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types"
 import Cell from "./Cell";
 import '../assets/css/DeckScreen.css'
-import { useState } from "react";
 
 function DeckScreen({player, startBattle}){
     const [length, setLength] = useState(1);
     const [vertical, setVertical] = useState(false);
     const [greenHighLight, setGreenHighLight] = useState([]);
+    const [greenVertical , setGreenVertical] = useState([]);
     const [aroundHighLight, setAroundHighLight] = useState([]);
+    const [greyVertical, setGreyVertical] = useState([]);
     const [error, setError] = useState(false);
+    const [errorVertical, setErrorVertical] = useState(false);
+    const [placedGreen ,setPlacedGreen] = useState([]);
     const mapWidth = player.board.mapx; 
 
     const handleChangeType = (type) => {
         setLength(type);
     }
 
+    const handleChangeVertical = () => {
+        setVertical(!vertical)
+    }
+
     const handlePlaceShip = (x,y) => {
-        console.log(length,x,y,vertical, error);
+        if(error || errorVertical){
+            return false;
+        }
+        const res = player.placeShip(length,x,y,vertical);
+        if(res){
+            if(vertical){
+                setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenVertical]);
+            }
+            else{
+                setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenHighLight]);
+            }
+        }
     }
 
     const handleGreenLight = (x, y, mode) => {
         if(mode){
-            const arrayGreen = [];
-            if(vertical){
+            const greenVertical = [];
+            const greenHorizontal = [];
                 for(let i = 0 ; i < length ; i++){
-                    arrayGreen.push([x,y+i]);
+                    greenVertical.push([x,y+i]);
+                    greenHorizontal.push([x+i,y]);
                     if(y+i >= player.board.mapy || x > player.board.mapx){
-                        setError(true);
+                        setErrorVertical(true);
                     }
-                }
-            }
-            else {
-                for(let i = 0 ; i < length ; i++){
-                    arrayGreen.push([x+i,y]);
                     if(x+i >= player.board.mapx || y > player.board.mapy){
                         setError(true);
                     }
                 }
-            }
-            const adjacentCells = [];
-            for (const [shipX, shipY] of arrayGreen) {
+            let adjacentVertical = new Set();
+            let adjacentHorizontal = new Set();
+            for (const [shipX, shipY] of greenHorizontal) {
                 const surroundingCoords = [
                     [shipX, shipY - 1], // Up
                     [shipX, shipY + 1], // Down
@@ -51,18 +66,42 @@ function DeckScreen({player, startBattle}){
                     [shipX + 1, shipY + 1], // Down - Right
                 ];
                 for (const coord of surroundingCoords) {
-                    if (!arrayGreen.some(existingCoord => existingCoord[0] === coord[0] && existingCoord[1] === coord[1])) {
-                        adjacentCells.push([coord[0], coord[1]]); 
+                    if (!greenHorizontal.some(existingCoord => existingCoord[0] === coord[0] && existingCoord[1] === coord[1])) {
+                        adjacentHorizontal.add(`${coord[0]},${coord[1]}`); 
                     }
                 }
             }
-            setAroundHighLight(adjacentCells);
-            setGreenHighLight(arrayGreen);
+            for (const [shipX, shipY] of greenVertical) {
+                const surroundingCoords = [
+                    [shipX, shipY - 1], // Up
+                    [shipX, shipY + 1], // Down
+                    [shipX - 1, shipY], // Left
+                    [shipX + 1, shipY], // Right
+                    [shipX - 1, shipY - 1], // Up - Left
+                    [shipX + 1, shipY - 1], // Up - Right
+                    [shipX - 1, shipY + 1], // Down - Left
+                    [shipX + 1, shipY + 1], // Down - Right
+                ];
+                for (const coord of surroundingCoords) {
+                    if (!greenVertical.some(existingCoord => existingCoord[0] === coord[0] && existingCoord[1] === coord[1])) {
+                        adjacentVertical.add(`${coord[0]},${coord[1]}`); 
+                    }
+                }
+            }
+            adjacentHorizontal = Array.from(adjacentHorizontal).map(coord => coord.split(',').map(Number));
+            adjacentVertical = Array.from(adjacentVertical).map(coord => coord.split(',').map(Number));
+            setAroundHighLight(adjacentHorizontal);
+            setGreyVertical(adjacentVertical);
+            setGreenHighLight(greenHorizontal);
+            setGreenVertical(greenVertical);
         }
         if(!mode){
             setGreenHighLight([]);
+            setGreenVertical([]);
             setAroundHighLight([]);
+            setGreyVertical([]);
             setError(false);
+            setErrorVertical(false);
         }
     }
 
@@ -74,7 +113,21 @@ function DeckScreen({player, startBattle}){
                     const x = index % mapWidth; 
                     const y = Math.floor(index / mapWidth); 
 
-                    return <Cell key={index} x={x} y={y} placeShip={handlePlaceShip} greenLight={greenHighLight} greyLight={aroundHighLight} changeGreenLight={handleGreenLight} colorError={error}/>;
+                    return (
+                        <Cell 
+                            key={index} 
+                            x={x} 
+                            y={y} 
+                            placeShip={handlePlaceShip} 
+                            greenLight={vertical ? greenVertical : greenHighLight} 
+                            greyLight={vertical ? greyVertical : aroundHighLight} 
+                            changeGreenLight={handleGreenLight} 
+                            colorError={vertical? errorVertical : error} 
+                            vertical={vertical} 
+                            changeVertical={handleChangeVertical}
+                            placedGreen={placedGreen}
+                        />
+                    );
                 })}
             </div>
             <div className="deck-types">
