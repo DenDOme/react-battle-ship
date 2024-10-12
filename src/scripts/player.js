@@ -6,7 +6,7 @@ class Player{
     }
 
     hitShip(x,y){
-        return this.hitShip(x,y);
+        return this.board.hitShip(x,y);
     }
 
     placeShip(lenght,x,y,vertical){

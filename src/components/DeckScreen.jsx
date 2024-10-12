@@ -13,6 +13,12 @@ function DeckScreen({player, startBattle}){
     const [error, setError] = useState(false);
     const [errorVertical, setErrorVertical] = useState(false);
     const [placedGreen ,setPlacedGreen] = useState([]);
+    const [shipAmount, setShipAmount] = useState(new Map([
+        [1, 4],
+        [2, 3],
+        [3, 2],
+        [4, 1],
+    ]));
     const mapWidth = player.board.mapx; 
 
     const handleChangeType = (type) => {
@@ -24,11 +30,20 @@ function DeckScreen({player, startBattle}){
     }
 
     const handlePlaceShip = (x,y) => {
-        if(error || errorVertical){
+        if((error && !vertical)|| (errorVertical && vertical)){
             return false;
         }
         const res = player.placeShip(length,x,y,vertical);
         if(res){
+            setShipAmount((prevHash) => {
+                const newHash = new Map(prevHash);
+                const currentHash = newHash.get(length) || 0;
+                if(currentHash > 0){
+                    newHash.set(length, currentHash - 1);
+                }
+                return newHash
+            })
+
             if(vertical){
                 setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenVertical]);
             }
@@ -90,6 +105,30 @@ function DeckScreen({player, startBattle}){
             }
             adjacentHorizontal = Array.from(adjacentHorizontal).map(coord => coord.split(',').map(Number));
             adjacentVertical = Array.from(adjacentVertical).map(coord => coord.split(',').map(Number));
+            if(vertical){
+                for(const coords of adjacentVertical){
+                    if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
+                        setErrorVertical(true);
+                    }
+                }
+                for(const coords of greenVertical){
+                    if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
+                        setErrorVertical(true);
+                    }
+                }
+            }
+            else {
+                for(const coords of adjacentHorizontal){
+                    if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
+                        setError(true);
+                    }
+                }
+                for(const coords of greenHorizontal){
+                    if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
+                        setError(true);
+                    }
+                }
+            }
             setAroundHighLight(adjacentHorizontal);
             setGreyVertical(adjacentVertical);
             setGreenHighLight(greenHorizontal);
@@ -131,10 +170,10 @@ function DeckScreen({player, startBattle}){
                 })}
             </div>
             <div className="deck-types">
-                <button onClick={() => handleChangeType(1)}>1x</button>
-                <button onClick={() => handleChangeType(2)}>2x</button>
-                <button onClick={() => handleChangeType(3)}>3x</button>
-                <button onClick={() => handleChangeType(4)}>4x</button>
+                <div className="types"><p>amount: {shipAmount.get(1)} </p><button onClick={() => handleChangeType(1)}>1x</button></div>
+                <div className="types"><p>amount: {shipAmount.get(2)} </p><button onClick={() => handleChangeType(2)}>2x</button></div>
+                <div className="types"><p>amount: {shipAmount.get(3)} </p><button onClick={() => handleChangeType(3)}>3x</button></div>
+                <div className="types"><p>amount: {shipAmount.get(4)} </p><button onClick={() => handleChangeType(4)}>4x</button></div>
             </div>
             <button onClick={() => startBattle(2)}>Start Battle</button>
         </>
