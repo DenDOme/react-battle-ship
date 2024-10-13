@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types"
 import Cell from "./Cell";
 import '../assets/css/DeckScreen.css'
+import Ship from "../scripts/Ship";
 
 function DeckScreen({player, startBattle}){
     const [length, setLength] = useState(1);
     const [vertical, setVertical] = useState(false);
-    const [greenHighLight, setGreenHighLight] = useState([]);
+    const [greenHorizontal, setGreenHorizontal] = useState([]);
     const [greenVertical , setGreenVertical] = useState([]);
-    const [aroundHighLight, setAroundHighLight] = useState([]);
+    const [greyHorizontal, setGreyHorizontal] = useState([]);
     const [greyVertical, setGreyVertical] = useState([]);
-    const [error, setError] = useState(false);
+    const [errorHorizontal, setErrorHorizontal] = useState(false);
     const [errorVertical, setErrorVertical] = useState(false);
     const [placedGreen ,setPlacedGreen] = useState([]);
     const [shipAmount, setShipAmount] = useState(new Map([
@@ -30,7 +31,7 @@ function DeckScreen({player, startBattle}){
     }
 
     const handlePlaceShip = (x,y) => {
-        if((error && !vertical)|| (errorVertical && vertical)){
+        if((errorHorizontal && !vertical)|| (errorVertical && vertical)){
             return false;
         }
         const res = player.placeShip(length,x,y,vertical);
@@ -48,7 +49,7 @@ function DeckScreen({player, startBattle}){
                 setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenVertical]);
             }
             else{
-                setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenHighLight]);
+                setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenHorizontal]);
             }
         }
     }
@@ -64,47 +65,11 @@ function DeckScreen({player, startBattle}){
                         setErrorVertical(true);
                     }
                     if(x+i >= player.board.mapx || y > player.board.mapy){
-                        setError(true);
+                        setErrorHorizontal(true);
                     }
                 }
-            let adjacentVertical = new Set();
-            let adjacentHorizontal = new Set();
-            for (const [shipX, shipY] of greenHorizontal) {
-                const surroundingCoords = [
-                    [shipX, shipY - 1], // Up
-                    [shipX, shipY + 1], // Down
-                    [shipX - 1, shipY], // Left
-                    [shipX + 1, shipY], // Right
-                    [shipX - 1, shipY - 1], // Up - Left
-                    [shipX + 1, shipY - 1], // Up - Right
-                    [shipX - 1, shipY + 1], // Down - Left
-                    [shipX + 1, shipY + 1], // Down - Right
-                ];
-                for (const coord of surroundingCoords) {
-                    if (!greenHorizontal.some(existingCoord => existingCoord[0] === coord[0] && existingCoord[1] === coord[1])) {
-                        adjacentHorizontal.add(`${coord[0]},${coord[1]}`); 
-                    }
-                }
-            }
-            for (const [shipX, shipY] of greenVertical) {
-                const surroundingCoords = [
-                    [shipX, shipY - 1], // Up
-                    [shipX, shipY + 1], // Down
-                    [shipX - 1, shipY], // Left
-                    [shipX + 1, shipY], // Right
-                    [shipX - 1, shipY - 1], // Up - Left
-                    [shipX + 1, shipY - 1], // Up - Right
-                    [shipX - 1, shipY + 1], // Down - Left
-                    [shipX + 1, shipY + 1], // Down - Right
-                ];
-                for (const coord of surroundingCoords) {
-                    if (!greenVertical.some(existingCoord => existingCoord[0] === coord[0] && existingCoord[1] === coord[1])) {
-                        adjacentVertical.add(`${coord[0]},${coord[1]}`); 
-                    }
-                }
-            }
-            adjacentHorizontal = Array.from(adjacentHorizontal).map(coord => coord.split(',').map(Number));
-            adjacentVertical = Array.from(adjacentVertical).map(coord => coord.split(',').map(Number));
+            const adjacentHorizontal = checkAdjacent(greenHorizontal);
+            const adjacentVertical = checkAdjacent(greenVertical);                
             if(vertical){
                 for(const coords of adjacentVertical){
                     if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
@@ -120,28 +85,44 @@ function DeckScreen({player, startBattle}){
             else {
                 for(const coords of adjacentHorizontal){
                     if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
-                        setError(true);
+                        setErrorHorizontal(true);
                     }
                 }
                 for(const coords of greenHorizontal){
                     if(placedGreen.some(existingCoord => existingCoord[0] === coords[0] && existingCoord[1] === coords[1])){
-                        setError(true);
+                        setErrorHorizontal(true);
                     }
                 }
             }
-            setAroundHighLight(adjacentHorizontal);
+            setGreyHorizontal(adjacentHorizontal);
             setGreyVertical(adjacentVertical);
-            setGreenHighLight(greenHorizontal);
+            setGreenHorizontal(greenHorizontal);
             setGreenVertical(greenVertical);
         }
         if(!mode){
-            setGreenHighLight([]);
+            setGreenHorizontal([]);
             setGreenVertical([]);
-            setAroundHighLight([]);
+            setGreyHorizontal([]);
             setGreyVertical([]);
-            setError(false);
+            setErrorHorizontal(false);
             setErrorVertical(false);
         }
+    }
+
+    const checkAdjacent = (coordinates) => {
+        const adjacentSet = new Set();
+        for (const [shipX, shipY] of coordinates) {
+          const surroundingCoords = [
+            [shipX, shipY - 1], [shipX, shipY + 1], // Up/Down
+            [shipX - 1, shipY], [shipX + 1, shipY], // Left/Right
+            [shipX - 1, shipY - 1], [shipX + 1, shipY - 1], // Diagonals
+            [shipX - 1, shipY + 1], [shipX + 1, shipY + 1],
+          ];
+          for (const coord of surroundingCoords) {
+            adjacentSet.add(`${coord[0]},${coord[1]}`);
+          }
+        }
+        return Array.from(adjacentSet).map(coord => coord.split(',').map(Number));
     }
 
     return (
@@ -151,6 +132,14 @@ function DeckScreen({player, startBattle}){
                 {player.board.map.map((cell, index) => {
                     const x = index % mapWidth; 
                     const y = Math.floor(index / mapWidth); 
+                    let cellState = "";
+                    if (cell === 0) {
+                        cellState = "empty";
+                    } else if (cell instanceof Ship) {
+                        cellState = "ship";
+                    } else if (cell === 2) {
+                        cellState = "missed";
+                    }
 
                     return (
                         <Cell 
@@ -158,10 +147,11 @@ function DeckScreen({player, startBattle}){
                             x={x} 
                             y={y} 
                             placeShip={handlePlaceShip} 
-                            greenLight={vertical ? greenVertical : greenHighLight} 
-                            greyLight={vertical ? greyVertical : aroundHighLight} 
+                            cellState={cellState}
                             changeGreenLight={handleGreenLight} 
-                            colorError={vertical? errorVertical : error} 
+                            greenLight={vertical ? greenVertical : greenHorizontal} 
+                            greyLight={vertical ? greyVertical : greyHorizontal} 
+                            colorError={vertical? errorVertical : errorHorizontal} 
                             vertical={vertical} 
                             changeVertical={handleChangeVertical}
                             placedGreen={placedGreen}
