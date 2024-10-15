@@ -7,7 +7,7 @@ function ComputerCell({ x, y, cellState, hitShip }) {
         if (cellState === 'missed') {
             setHoverStyle({ backgroundColor: 'darkcyan' });
         } else if (cellState === 'blast') {
-            setHoverStyle({ backgroundColor: 'lightgrey' });
+            setHoverStyle({ backgroundColor: 'darkcyan' });
         } else if (cellState === 'hit') {
             setHoverStyle({ backgroundColor: 'red' });
         } else {

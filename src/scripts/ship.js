@@ -3,6 +3,7 @@ class Ship {
         this.length = length;
         this.health = length;
         this.isSunked = false;
+        this.coords = [];
     }
 
     hitShip(){
@@ -17,11 +18,16 @@ class Ship {
         }
     }
 
+    addCoords(coords){
+        this.coords.push(coords);
+    }
+
     info(){
         return{
             'length': this.length, 
             'health': this.health, 
             'isSunked': this.isSunked,
+            'coords': this.coords,
         }
     }
 }

@@ -8,6 +8,7 @@ describe('Ship test', () => {
         'length' : 1,
         'health' : 1,
         'isSunked' : false,
+        'coords': []
     })
   })
   
@@ -18,6 +19,7 @@ describe('Ship test', () => {
       'length' : 4,
       'health' : 3,
       'isSunked' : false,
+      'coords': []
     })
   })
 
@@ -28,6 +30,7 @@ describe('Ship test', () => {
       'length' : 1,
       'health' : 0,
       'isSunked' : true,
+      'coords': []
     })
   })
 })

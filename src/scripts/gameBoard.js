@@ -28,10 +28,12 @@ class gameBoard {
         if(!vertical){
             for(let i = 0 ; i < length ; i++){
                 this.map[x + i + (y * this.mapy)] = newShip;
+                newShip.addCoords([x + i, y]);
             }
         }else{
             for(let i = 0 ; i < length ; i++){
                 this.map[x + ((y + i) * this.mapy)] = newShip
+                newShip.addCoords([x, y + i]);
             }
         }
         return true
@@ -45,12 +47,35 @@ class gameBoard {
         }
         else{
             const ship = this.map[x+(y*this.mapy)];
-            const res = this.map[x+(y*this.mapy)].hitShip();
+            const res = ship.hitShip();
             if(res) this.map[x+(y*this.mapy)] = 3;
-            if(ship.isSunked) console.log('sunked');
+            if(ship.isSunked) this.markBlastShots(ship);
             this.checkShipSunks();
             return true;
         }
+    }
+
+    markBlastShots(ship){
+        ship.coords.forEach(([x,y]) => {
+            const surroundingCoords = [
+                [x - 1, y - 1],
+                [x, y - 1],
+                [x + 1, y - 1], 
+                [x - 1, y],
+                [x + 1, y],       
+                [x - 1, y + 1],
+                [x, y + 1],
+                [x + 1, y + 1]  
+            ];
+
+            for (const [adjX, adjY] of surroundingCoords) {
+                if (adjX >= 0 && adjX < this.mapx && adjY >= 0 && adjY < this.mapy) {
+                    if (this.map[adjX + adjY * this.mapy] !== 3) {
+                        this.map[adjX + adjY * this.mapy] = 1; 
+                    }
+                }
+            }
+        })
     }
 
     checkShipSunks(){
