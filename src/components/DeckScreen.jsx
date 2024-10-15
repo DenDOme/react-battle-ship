@@ -1,8 +1,8 @@
 import { useState } from "react";
 import PropTypes from "prop-types"
-import Cell from "./Cell";
-import '../assets/css/DeckScreen.css'
+import PlaceCell from "./Cells/PlaceCell";
 import Ship from "../scripts/Ship";
+import '../assets/css/DeckScreen.css'
 
 function DeckScreen({player, startBattle}){
     const [length, setLength] = useState(1);
@@ -142,7 +142,7 @@ function DeckScreen({player, startBattle}){
                     }
 
                     return (
-                        <Cell 
+                        <PlaceCell
                             key={index} 
                             x={x} 
                             y={y} 

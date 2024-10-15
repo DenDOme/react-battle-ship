@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import '../assets/css/Cell.css';
+import '../../assets/css/Cell.css'
 
-function Cell({x, y, placeShip, greenLight, greyLight, changeGreenLight, colorError, vertical, changeVertical, cellState}) {
+function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, colorError, vertical, changeVertical, cellState}) {
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'none' });
 
     useEffect(() => {
@@ -16,8 +16,6 @@ function Cell({x, y, placeShip, greenLight, greyLight, changeGreenLight, colorEr
 
         if (cellState === 'ship') {
             setHoverStyle({ backgroundColor: 'green' });
-        } else if (cellState === 'missed') {
-            setHoverStyle({ backgroundColor: 'darkcyan' });
         } 
         else if (colorError && isGreen) {
             setHoverStyle({ backgroundColor: 'red' });
@@ -79,4 +77,4 @@ function Cell({x, y, placeShip, greenLight, greyLight, changeGreenLight, colorEr
 //     cellState: PropTypes.string.isRequired  
 // };
 
-export default Cell;
+export default PlaceCell;

@@ -1,8 +1,7 @@
-import Cell from "./Cell";
+import PlayerCell from "./Cells/PlayerCell";
 import Ship from "../scripts/Ship";
-import '../assets/css/DeckScreen.css'
 
-function Deck({player}){
+function PlayerDeck({player}){
     const mapWidth = player.board.mapx
 
     return(
@@ -16,12 +15,16 @@ function Deck({player}){
                         cellState = "empty";
                     } else if (cell instanceof Ship) {
                         cellState = "ship";
+                    } else if (cell === 1){
+                        cellState = 'blast'
                     } else if (cell === 2) {
                         cellState = "missed";
+                    } else if (cell === 3) {
+                        cellState = "hit"
                     }
 
                     return (
-                        <Cell 
+                        <PlayerCell
                             key={index} 
                             x={x} 
                             y={y} 
@@ -34,4 +37,4 @@ function Deck({player}){
     )
 }
 
-export default Deck
+export default PlayerDeck

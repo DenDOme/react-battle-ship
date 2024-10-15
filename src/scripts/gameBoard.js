@@ -5,6 +5,7 @@ import Ship from "./Ship";
     'ship' - ship placed in cell
     '1' - blast shot cell (around sunked ship)
     '2' - missed shot cell
+    '3' - ship has been hit
 */ 
 
 class gameBoard {
@@ -43,7 +44,10 @@ class gameBoard {
             return false
         }
         else{
-            this.map[x+(y*this.mapy)].hitShip();
+            const ship = this.map[x+(y*this.mapy)];
+            const res = this.map[x+(y*this.mapy)].hitShip();
+            if(res) this.map[x+(y*this.mapy)] = 3;
+            if(ship.isSunked) console.log('sunked');
             this.checkShipSunks();
             return true;
         }

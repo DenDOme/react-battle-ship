@@ -8,6 +8,7 @@ class Ship {
     hitShip(){
         this.health--;
         this.checkSunked();
+        return true;
     }
 
     checkSunked(){

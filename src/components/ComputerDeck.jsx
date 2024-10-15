@@ -1,8 +1,16 @@
-import Cell from "./Cell";
+import ComputerCell from './Cells/ComputerCell';
 import Ship from "../scripts/Ship";
+import { useState } from 'react';
 
 function ComputerDeck({player}){
+    const [board, setBoard] = useState([...player.board.map]);
     const mapWidth = player.board.mapx
+
+    const handleHitShip = (x,y) => {
+        const res = player.hitShip(x,y);
+
+        setBoard([...player.board.map]);
+    }
 
     return(
         <>
@@ -15,16 +23,21 @@ function ComputerDeck({player}){
                         cellState = "empty";
                     } else if (cell instanceof Ship) {
                         cellState = "ship";
+                    } else if (cell === 1){
+                        cellState = 'blast'
                     } else if (cell === 2) {
                         cellState = "missed";
+                    } else if (cell === 3) {
+                        cellState = "hit"
                     }
 
                     return (
-                        <Cell 
+                        <ComputerCell
                             key={index} 
                             x={x} 
                             y={y} 
                             cellState={cellState}
+                            hitShip={handleHitShip}
                         />
                     );
                 })}
