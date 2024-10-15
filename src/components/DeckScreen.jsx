@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types"
 import PlaceCell from "./Cells/PlaceCell";
 import Ship from "../scripts/Ship";
@@ -14,6 +14,7 @@ function DeckScreen({player, startBattle}){
     const [errorHorizontal, setErrorHorizontal] = useState(false);
     const [errorVertical, setErrorVertical] = useState(false);
     const [placedGreen ,setPlacedGreen] = useState([]);
+    const [button, setButton] = useState(true);
     const [shipAmount, setShipAmount] = useState(new Map([
         [1, 4],
         [2, 3],
@@ -51,6 +52,9 @@ function DeckScreen({player, startBattle}){
             else{
                 setPlacedGreen(prevPlacedGreen => [...prevPlacedGreen, ...greenHorizontal]);
             }
+        }
+        if(player.board.ships.length === 10){
+            setButton(false);
         }
     }
 
@@ -165,7 +169,10 @@ function DeckScreen({player, startBattle}){
                 <div className="types"><p>amount: {shipAmount.get(3)} </p><button onClick={() => handleChangeType(3)}>3x</button></div>
                 <div className="types"><p>amount: {shipAmount.get(4)} </p><button onClick={() => handleChangeType(4)}>4x</button></div>
             </div>
-            <button onClick={() => startBattle(2)}>Start Battle</button>
+            <button 
+                disabled={button}
+                onClick={() => startBattle(2)}
+            >Start Battle</button>
         </>
     )
 }

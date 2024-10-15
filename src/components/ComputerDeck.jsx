@@ -2,12 +2,13 @@ import ComputerCell from './Cells/ComputerCell';
 import Ship from "../scripts/Ship";
 import { useState } from 'react';
 
-function ComputerDeck({player}){
+function ComputerDeck({player, round, changeRound}){
     const [board, setBoard] = useState([...player.board.map]);
     const mapWidth = player.board.mapx
 
     const handleHitShip = (x,y) => {
         const res = player.hitShip(x,y);
+        if(!res) {changeRound()};
 
         setBoard([...player.board.map]);
     }
@@ -38,6 +39,7 @@ function ComputerDeck({player}){
                             y={y} 
                             cellState={cellState}
                             hitShip={handleHitShip}
+                            disabled={round}
                         />
                     );
                 })}

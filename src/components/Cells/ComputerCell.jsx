@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function ComputerCell({ x, y, cellState, hitShip }) {
+function ComputerCell({ x, y, cellState, hitShip, disabled }) {
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'white' });
 
     useEffect(() => {
@@ -19,6 +19,7 @@ function ComputerCell({ x, y, cellState, hitShip }) {
         <button
             className="dataset-button"
             style={hoverStyle}
+            disabled={disabled}
             onClick={() => { hitShip(x, y); }}
         >
         </button>

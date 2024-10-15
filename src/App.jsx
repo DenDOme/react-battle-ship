@@ -9,32 +9,28 @@ import GameScreen from './components/GameScreen';
 function App() {
   const [player, setPlayer] = useState(new Player());
   const [computer, setComputer] = useState(new Computer());
-  const [round, setRound] = useState(null);
+  const [round, setRound] = useState(true);
   const [mode, setMode] = useState(0);
+  const [winner, setWinner] = useState(null);
 
   const handleChangeMode = (state) => {
     setMode(state);
-    handleChangeRound();
+    if(state === 2) handleChangeRound();
   }
 
   const handleChangeRound = () => {
-    setRound(!!round);
+    setRound(!round);
   }
 
-  useEffect(() => {
-    if(round === 0){
-      // player login
-    }
-    if(round === 1){
-      //computer logic
-    }
-  }, [round]);
-
+  const handleChangeWinner = (winner) => {
+    setWinner(winner);
+  }
+  
   return (
     <>
     {mode === 0 && <StartScreen startGame={handleChangeMode}/>}
     {mode === 1 && <DeckScreen player={player} startBattle={handleChangeMode}/>}
-    {mode === 2 && <GameScreen player={player} computer={computer} round={round} changeRound={handleChangeRound} endGame={handleChangeMode}/>}
+    {mode === 2 && <GameScreen player={player} computer={computer} round={round} changeRound={handleChangeRound} endGame={handleChangeMode} changeWinner={handleChangeWinner}/>}
     </>
   );
 }
