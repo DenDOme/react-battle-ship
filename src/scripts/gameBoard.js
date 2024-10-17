@@ -1,12 +1,9 @@
 import Ship from "./Ship";
 
-/*
-    '0' - empty cell
-    'ship' - ship placed in cell
-    '1' - blast shot cell (around sunked ship)
-    '2' - missed shot cell
-    '3' - ship has been hit
-*/ 
+const EMPTY = 0;
+const BLAST_SHOT = 1;
+const MISSED_SHOT = 2;
+const HIT = 3;
 
 class gameBoard {
     constructor(){
@@ -40,15 +37,15 @@ class gameBoard {
     }
 
     hitShip(x,y){
-        if(this.map[x+(y*this.mapy)] == 0){
+        if(this.map[x+(y*this.mapy)] == EMPTY){
             this.missedShots++;
-            this.map[x+(y*this.mapy)] = 2;
+            this.map[x+(y*this.mapy)] = MISSED_SHOT;
             return false
         }
         else{
             const ship = this.map[x+(y*this.mapy)];
             const res = ship.hitShip();
-            if(res) this.map[x+(y*this.mapy)] = 3;
+            if(res) this.map[x+(y*this.mapy)] = HIT;
             if(ship.isSunked) this.markBlastShots(ship);
             this.checkShipSunks();
             return true;
@@ -70,8 +67,8 @@ class gameBoard {
 
             for (const [adjX, adjY] of surroundingCoords) {
                 if (adjX >= 0 && adjX < this.mapx && adjY >= 0 && adjY < this.mapy) {
-                    if (this.map[adjX + adjY * this.mapy] !== 3) {
-                        this.map[adjX + adjY * this.mapy] = 1; 
+                    if (this.map[adjX + adjY * this.mapy] !== HIT) {
+                        this.map[adjX + adjY * this.mapy] = BLAST_SHOT; 
                     }
                 }
             }
@@ -120,13 +117,13 @@ class gameBoard {
                 [shipX + 1, shipY + 1], // Down - right
             ];
 
-            if (this.map[shipX + shipY * this.mapy] !== 0) {
+            if (this.map[shipX + shipY * this.mapy] !== EMPTY) {
                 return false; 
             }
 
             for (const [adjX, adjY] of adjacentCells) {
                 if (adjX >= 0 && adjX < this.mapx && adjY >= 0 && adjY < this.mapy) {
-                    if (this.map[adjX + adjY * this.mapy] !== 0) {
+                    if (this.map[adjX + adjY * this.mapy] !== EMPTY) {
                         return false; 
                     }
                 }
@@ -135,13 +132,13 @@ class gameBoard {
 
         if (!vertical) {
             for (let i = 0; i < length; i++) {
-                if (x + i >= this.mapx || this.map[x + i + (y * this.mapy)] !== 0) {
+                if (x + i >= this.mapx || this.map[x + i + (y * this.mapy)] !== EMPTY) {
                     return false;
                 }
             }
         } else {
             for (let i = 0; i < length; i++) {
-                if (y + i >= this.mapy || this.map[x + ((y + i) * this.mapy)] !== 0) {
+                if (y + i >= this.mapy || this.map[x + ((y + i) * this.mapy)] !== EMPTY) {
                     return false;
                 }
             }

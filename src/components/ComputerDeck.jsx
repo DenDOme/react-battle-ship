@@ -2,13 +2,14 @@ import ComputerCell from './Cells/ComputerCell';
 import Ship from "../scripts/Ship";
 import { useState } from 'react';
 
-function ComputerDeck({player, round, changeRound}){
+function ComputerDeck({player, round, checkWinner, changeRound}){
     const [board, setBoard] = useState([...player.board.map]);
     const mapWidth = player.board.mapx
 
     const handleHitShip = (x,y) => {
         const res = player.hitShip(x,y);
         if(!res) {changeRound()};
+        checkWinner();
 
         setBoard([...player.board.map]);
     }

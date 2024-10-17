@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types"
 import PlaceCell from "./Cells/PlaceCell";
 import Ship from "../scripts/Ship";

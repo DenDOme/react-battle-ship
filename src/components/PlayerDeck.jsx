@@ -2,7 +2,7 @@ import PlayerCell from "./Cells/PlayerCell";
 import Ship from "../scripts/Ship";
 import { useEffect, useState } from "react";
 
-function PlayerDeck({player, round, computer, changeRound}){
+function PlayerDeck({player, round, computer, checkWinner, changeRound}){
     const [board, setBoard] = useState([...player.board.map]);
     const [isComputerTurn, setIsComputerTurn] = useState(false);
     const mapWidth = player.board.mapx
@@ -28,6 +28,7 @@ function PlayerDeck({player, round, computer, changeRound}){
             if (!res) {
                 changeRound();
             }
+            checkWinner();
         }
     }, [isComputerTurn, round, player, computer, changeRound]);
 

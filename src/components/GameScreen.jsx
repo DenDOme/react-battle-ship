@@ -5,13 +5,16 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
     const winner = () => {
         if(player.board.allSunked) {
             changeWinner('computer');
-            return false
+            setTimeout(() => {
+                endGame(3);   
+            }, 1000);
         }
         if(computer.board.allSunked) {
             changeWinner('player');
-            return false
+            setTimeout(() => {
+                endGame(3);
+            }, 1000);
         }
-        return true;
     }
 
     const triggerChangeRound = () => {
@@ -21,10 +24,10 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
     return(
         <>
             <div className="player">
-                <PlayerDeck player={player} round={round} computer={computer} changeRound={triggerChangeRound} />
+                <PlayerDeck player={player} round={round} computer={computer} checkWinner={winner} changeRound={triggerChangeRound} />
             </div>
             <div className="computer">
-                <ComputerDeck player={computer} round={round} changeRound={triggerChangeRound} />
+                <ComputerDeck player={computer} round={round} checkWinner={winner} changeRound={triggerChangeRound} />
             </div>
         </>
     )
