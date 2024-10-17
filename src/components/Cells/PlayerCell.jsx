@@ -9,7 +9,7 @@ function PlayerCell({x, y, cellState}){
         } else if (cellState === 'missed') {
             setHoverStyle({ backgroundColor: 'darkcyan' });
         } else if (cellState === 'blast') {
-            setHoverStyle({ backgroundColor: 'lightgrey' });
+            setHoverStyle({ backgroundColor: 'darkcyan' });
         } else if (cellState === 'hit') {
             setHoverStyle({ backgroundColor: 'red'})
         } else {

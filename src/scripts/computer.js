@@ -16,7 +16,9 @@ class Computer{
             [0, 8], [1, 8], [2, 8], [3, 8], [4, 8], [5, 8], [6, 8], [7, 8], [8, 8], [9, 8],
             [0, 9], [1, 9], [2, 9], [3, 9], [4, 9], [5, 9], [6, 9], [7, 9], [8, 9], [9, 9]
         ];
-        this.foundCoords = []
+        this.foundCoords = [];
+        this.vertical = null; // true === vertical | false === horizontal
+        this.direction = null; // true === right or down | false === left or up
     }
 
     hitShip(x,y){
@@ -116,30 +118,114 @@ class Computer{
     }
 
     hitOpponentShip(Opponent){
-        // if(this.foundCoords.length > 0){
-        //     if(this.foundCoords.length === 1){
-        //         const [x,y] = this.foundCoords[0];
+        if(this.foundCoords.length > 0){
+            if(this.foundCoords.length === 1){
+                const [x,y] = this.foundCoords[0];
 
-        //         const surroundingCoords = [
-        //             [x - 1, y - 1],
-        //             [x, y - 1],
-        //             [x + 1, y - 1], 
-        //             [x - 1, y],
-        //             [x + 1, y],       
-        //             [x - 1, y + 1],
-        //             [x, y + 1],
-        //             [x + 1, y + 1]  
-        //         ];
+                const surroundingCoords = [
+                    [x, y - 1],
+                    [x - 1, y],
+                    [x + 1, y],       
+                    [x, y + 1],
+                ];
 
-        //         const randomCoords = this.getRandomCoords(this.surroundingCoords.length);
-        //         const [adjX, adjY] = surroundingCoords[randomCoords];
+                let hitSuccess = false;
 
-        //     }
-        // }
-        // else{
+                while(surroundingCoords.length > 0 && !hitSuccess){
+                    const randomCoords = this.getRandomCoords(surroundingCoords.length);
+                    const [adjX, adjY] = surroundingCoords[randomCoords];
+                    const mapSome = this.mapCoordsArray.some(([mapX,mapY]) => mapX === adjX && mapY === adjY)
+                    const foundSome = this.foundCoords.some(([mapX, mapY]) => mapX === adjX && mapY === adjY)
+
+                    if(!mapSome){
+                        surroundingCoords.splice(randomCoords, 1);
+                        continue;
+                    }
+    
+                    if(mapSome && !foundSome && (adjX >= 0 && adjX < this.board.mapx && adjY >= 0 && adjY < this.board.mapy)){
+                        const ship = Opponent.board.map[adjX + (adjY * Opponent.board.mapx)];
+                        const result = Opponent.hitShip(adjX, adjY);
+
+                        const coordIndex = this.mapCoordsArray.findIndex(([mapX,mapY]) => mapX === adjX && mapY === adjY);
+                        this.mapCoordsArray.splice(coordIndex, 1);
+
+                        if(result){
+                            this.foundCoords.push([adjX,adjY]);
+                            this.checkShipSunk(ship,x,y);
+                            this.sortFoundCoords();
+
+                            hitSuccess = true;  
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                }
+
+            }
+            if(this.foundCoords.length >= 2){
+                if(this.direction == null && this.vertical == null){
+                    const [lastX, lastY] = this.foundCoords[this.foundCoords.length - 1];
+                    const [secondLastX, secondLastY] = this.foundCoords[this.foundCoords.length - 2];
+                    
+                    if(lastX === secondLastX){
+                        this.vertical = true;
+                        if(secondLastY < lastY){
+                            this.direction = true;
+                        }
+                        else{
+                            this.direction = false;
+                        }
+                    } else if(lastY === secondLastY){
+                        this.vertical = false;
+                        if(secondLastX < lastX){
+                            this.direction = true;
+                        }
+                        else{
+                            this.direction = false;
+                        }
+                    }
+                }
+
+                let nextCoord;
+                
+                if(this.vertical){
+                    nextCoord = this.direction ? [this.foundCoords[this.foundCoords.length - 1][0], this.foundCoords[this.foundCoords.length - 1][1] + 1] : [this.foundCoords[0][0], this.foundCoords[0][1] - 1];
+                }
+                else {
+                    nextCoord = this.direction ? [this.foundCoords[this.foundCoords.length - 1][0] + 1, this.foundCoords[this.foundCoords.length - 1][1]] : [this.foundCoords[0][0] - 1, this.foundCoords[0][1]];
+                }
+
+                const [nextX, nextY] = nextCoord;
+                const mapSome = this.mapCoordsArray.some(([mapX, mapY]) => mapX === nextX && mapY === nextY);
+                const isWithinBounds = (nextX >= 0 && nextX < this.board.mapx && nextY >= 0 && nextY < this.board.mapy);
+                const coordIndex = this.mapCoordsArray.findIndex(([mapX,mapY]) => mapX === nextX && mapY === nextY);
+
+                if(!isWithinBounds){
+                    this.direction = !this.direction
+                }
+
+                if (mapSome && isWithinBounds) {
+                    const ship = Opponent.board.map[nextX + (nextY * Opponent.board.mapx)];
+                    const result = Opponent.hitShip(nextX, nextY);
+                    this.mapCoordsArray.splice(coordIndex, 1);
+
+                    if (result) {
+                        this.foundCoords.push(nextCoord);
+                        this.checkShipSunk(ship, nextX, nextY);
+                        this.sortFoundCoords();
+                        return true; 
+                    }
+                    else {
+                        this.direction = !this.direction;
+                        return false
+                    }
+                }
+            }
+        }
+        else{
             const randomCoords = this.getRandomCoords(this.mapCoordsArray.length);
-            console.log(this.mapCoordsArray)
-            console.log(this.mapCoordsArray[randomCoords])
             const [x, y] = this.mapCoordsArray[randomCoords];
             this.mapCoordsArray.splice(randomCoords, 1);
             const ship = Opponent.board.map[x + (y*Opponent.board.mapx)];
@@ -147,11 +233,11 @@ class Computer{
             if(result){
                 this.foundCoords.push([x,y]);
                 this.checkShipSunk(ship, x, y);
-                
+                this.sortFoundCoords();
                 return true;
             }
             return false
-        // }
+        }
     }
 
     checkShipSunk(ship){
@@ -177,7 +263,19 @@ class Computer{
                     });
                 }
             }
+            this.foundCoords = [];
+            this.vertical = null;
+            this.direction = null;
         }
+    }
+
+    sortFoundCoords() {
+        this.foundCoords.sort((a, b) => {
+            if (a[0] !== b[0]) {
+                return a[0] - b[0];
+            }
+            return a[1] - b[1];
+        });
     }
 }
 
