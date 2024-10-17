@@ -1,8 +1,35 @@
 import PlayerCell from "./Cells/PlayerCell";
 import Ship from "../scripts/Ship";
+import { useEffect, useState } from "react";
 
-function PlayerDeck({player}){
+function PlayerDeck({player, round, computer, changeRound}){
+    const [board, setBoard] = useState([...player.board.map]);
+    const [isComputerTurn, setIsComputerTurn] = useState(false);
     const mapWidth = player.board.mapx
+
+    useEffect(() => {
+        setBoard([...player.board.map]);
+    }, [player.board.map]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (round && !isComputerTurn) {
+                setIsComputerTurn(true);
+            }
+        }, 1000);
+        return () => clearTimeout(timeout);
+    }, [round, isComputerTurn]);  
+
+    useEffect(() => {
+        if (isComputerTurn && round) {
+            const res = computer.hitOpponentShip(player);
+            setIsComputerTurn(false); 
+            
+            if (!res) {
+                changeRound();
+            }
+        }
+    }, [isComputerTurn, round, player, computer, changeRound]);
 
     return(
         <>

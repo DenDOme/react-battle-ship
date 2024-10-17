@@ -15,7 +15,7 @@ function PlayerCell({x, y, cellState}){
         } else {
             setHoverStyle({ backgroundColor: 'white' });
         }
-    }, [])
+    }, [cellState])
 
     return(
         <div

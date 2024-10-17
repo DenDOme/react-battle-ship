@@ -121,13 +121,13 @@ class gameBoard {
             ];
 
             if (this.map[shipX + shipY * this.mapy] !== 0) {
-                return false; // Space occupied
+                return false; 
             }
 
             for (const [adjX, adjY] of adjacentCells) {
                 if (adjX >= 0 && adjX < this.mapx && adjY >= 0 && adjY < this.mapy) {
                     if (this.map[adjX + adjY * this.mapy] !== 0) {
-                        return false; // Adjacent ship found
+                        return false; 
                     }
                 }
             }

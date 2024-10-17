@@ -21,7 +21,7 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
     return(
         <>
             <div className="player">
-                <PlayerDeck player={player} round={round} changeRound={triggerChangeRound} />
+                <PlayerDeck player={player} round={round} computer={computer} changeRound={triggerChangeRound} />
             </div>
             <div className="computer">
                 <ComputerDeck player={computer} round={round} changeRound={triggerChangeRound} />
