@@ -21,9 +21,6 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
 
     const triggerChangeRound = () => {
         changeRound();
-        while(1) {
-            console.log(1);
-        }
     }
 
     return(
