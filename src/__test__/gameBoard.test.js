@@ -1,5 +1,5 @@
 import gameBoard from "../scripts/gameBoard";
-import Ship from "../scripts/Ship";
+import Ship from "../scripts/ship.js";
 import { beforeEach, describe, expect, test } from "vitest";
 
 describe('check gameBoard', () => {

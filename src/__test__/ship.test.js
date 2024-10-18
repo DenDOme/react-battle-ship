@@ -1,4 +1,4 @@
-import Ship from "../scripts/Ship";
+import Ship from "../scripts/ship.js";
 import { describe, expect, test } from "vitest";
 
 describe('Ship test', () => {
