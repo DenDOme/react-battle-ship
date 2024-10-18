@@ -1,5 +1,6 @@
 import PlayerDeck from "./PlayerDeck";
 import ComputerDeck from "./ComputerDeck"
+import style from '../assets/css/DeckScreen.module.css'
 
 function GameScreen({player, computer, round, changeRound, endGame, changeWinner}){
     const winner = () => {
@@ -23,11 +24,14 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
 
     return(
         <>
-            <div className="player">
-                <PlayerDeck player={player} round={round} computer={computer} checkWinner={winner} changeRound={triggerChangeRound} />
-            </div>
-            <div className="computer">
-                <ComputerDeck player={computer} round={round} checkWinner={winner} changeRound={triggerChangeRound} />
+            <div className={`${style.deckRow}`}>
+                
+                <div className="player">
+                    <PlayerDeck player={player} round={round} computer={computer} checkWinner={winner} changeRound={triggerChangeRound} />
+                </div>
+                <div className="computer">
+                    <ComputerDeck player={computer} round={round} computer={player} checkWinner={winner} changeRound={triggerChangeRound} />
+                </div>
             </div>
         </>
     )

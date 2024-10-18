@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import style from '../../assets/css/Cell.module.css'
 
 function ComputerCell({ x, y, cellState, hitShip, disabled }) {
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'white' });
@@ -21,7 +22,7 @@ function ComputerCell({ x, y, cellState, hitShip, disabled }) {
 
     return (
         <button
-            className="dataset-button"
+            className={`${style.datasetButton}`}
             style={hoverStyle}
             disabled={disabled || disableButton}
             onClick={() => { hitShip(x, y); }}

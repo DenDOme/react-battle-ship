@@ -1,6 +1,7 @@
 import PlayerCell from "./Cells/PlayerCell";
 import Ship from "../scripts/Ship";
 import { useEffect, useState } from "react";
+import style from '../assets/css/DeckScreen.module.css'
 
 function PlayerDeck({player, round, computer, checkWinner, changeRound}){
     const [board, setBoard] = useState([...player.board.map]);
@@ -34,7 +35,11 @@ function PlayerDeck({player, round, computer, checkWinner, changeRound}){
 
     return(
         <>
-            <div className="deck-grid">
+            <div className={`${style.stats}`}>
+                <h2 className={`${style.name}`}>Player</h2>
+                <p className={`${style.counter}`}>Missed Shots : {computer.board.missedShots}</p>
+            </div>
+            <div className={`${style.deckGrid}`}>
                 {player.board.map.map((cell, index) => {
                     const x = index % mapWidth; 
                     const y = Math.floor(index / mapWidth); 

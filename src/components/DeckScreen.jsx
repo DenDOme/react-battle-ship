@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types"
 import PlaceCell from "./Cells/PlaceCell";
 import Ship from "../scripts/Ship";
-import '../assets/css/DeckScreen.css'
+import style from '../assets/css/DeckScreen.module.css'
 
 function DeckScreen({player, startBattle}){
     const [length, setLength] = useState(1);
@@ -131,48 +131,82 @@ function DeckScreen({player, startBattle}){
 
     return (
         <>
-            <h1>Deck Screen</h1>
-            <div className="deck-grid">
-                {player.board.map.map((cell, index) => {
-                    const x = index % mapWidth; 
-                    const y = Math.floor(index / mapWidth); 
-                    let cellState = "";
-                    if (cell === 0) {
-                        cellState = "empty";
-                    } else if (cell instanceof Ship) {
-                        cellState = "ship";
-                    } else if (cell === 2) {
-                        cellState = "missed";
-                    }
+            <div className={`${style.deckRow}`}>
+                <div className={`${style.deckGrid}`}>
+                    {player.board.map.map((cell, index) => {
+                        const x = index % mapWidth; 
+                        const y = Math.floor(index / mapWidth); 
+                        let cellState = "";
+                        if (cell === 0) {
+                            cellState = "empty";
+                        } else if (cell instanceof Ship) {
+                            cellState = "ship";
+                        } else if (cell === 2) {
+                            cellState = "missed";
+                        }
 
-                    return (
-                        <PlaceCell
-                            key={index} 
-                            x={x} 
-                            y={y} 
-                            placeShip={handlePlaceShip} 
-                            cellState={cellState}
-                            changeGreenLight={handleGreenLight} 
-                            greenLight={vertical ? greenVertical : greenHorizontal} 
-                            greyLight={vertical ? greyVertical : greyHorizontal} 
-                            colorError={vertical? errorVertical : errorHorizontal} 
-                            vertical={vertical} 
-                            changeVertical={handleChangeVertical}
-                            placedGreen={placedGreen}
-                        />
-                    );
-                })}
+                        return (
+                            <PlaceCell
+                                key={index} 
+                                x={x} 
+                                y={y} 
+                                placeShip={handlePlaceShip} 
+                                cellState={cellState}
+                                changeGreenLight={handleGreenLight} 
+                                greenLight={vertical ? greenVertical : greenHorizontal} 
+                                greyLight={vertical ? greyVertical : greyHorizontal} 
+                                colorError={vertical? errorVertical : errorHorizontal} 
+                                vertical={vertical} 
+                                changeVertical={handleChangeVertical}
+                                placedGreen={placedGreen}
+                            />
+                        );
+                    })}
+                </div>
+                <div className={`${style.rightPannel}`}>
+                    <div className={`${style.deckTypes}`}>
+                        <h2 className={`${style.deckTitle}`}>Ships Available</h2>
+                        <div className={`${style.typesColm}`}>
+                            <div className={`${style.types}`}>
+                                <button onClick={() => handleChangeType(4)} className={`${style.typeBlocks}`}>
+                                    <div className={`${style.block}`}></div>
+                                    <div className={`${style.block}`}></div>
+                                    <div className={`${style.block}`}></div>
+                                    <div className={`${style.block}`}></div>
+                                </button>
+                                <p className={`${style.typeNumber}`}>x{shipAmount.get(4)} </p>
+                            </div>
+                            <div className={`${style.types}`}>
+                                <button onClick={() => handleChangeType(3)} className={`${style.typeBlocks}`}>
+                                    <div className={`${style.block}`}></div>
+                                    <div className={`${style.block}`}></div>
+                                    <div className={`${style.block}`}></div>
+                                </button>
+                                <p className={`${style.typeNumber}`}>x{shipAmount.get(3)} </p>
+                            </div>
+                            <div className={`${style.types}`}>
+                                <button onClick={() => handleChangeType(2)} className={`${style.typeBlocks}`}>
+                                    <div className={`${style.block}`}></div>
+                                    <div className={`${style.block}`}></div>
+                                </button>
+                                <p className={`${style.typeNumber}`}>x{shipAmount.get(2)} </p>
+                            </div>
+                            <div className={`${style.types}`}>
+                                <button onClick={() => handleChangeType(1)} className={`${style.typeBlocks}`}>
+                                    <div className={`${style.block}`}></div>
+                                </button>
+                                <p className={`${style.typeNumber}`}>x{shipAmount.get(1)} </p>
+                            </div>
+                        </div>
+                        <button 
+                            disabled={button}
+                            onClick={() => startBattle(2)}
+                            className={`${style.button} button`}
+                        >Ready</button>
+                    </div>
+                </div>
             </div>
-            <div className="deck-types">
-                <div className="types"><p>amount: {shipAmount.get(1)} </p><button onClick={() => handleChangeType(1)}>1x</button></div>
-                <div className="types"><p>amount: {shipAmount.get(2)} </p><button onClick={() => handleChangeType(2)}>2x</button></div>
-                <div className="types"><p>amount: {shipAmount.get(3)} </p><button onClick={() => handleChangeType(3)}>3x</button></div>
-                <div className="types"><p>amount: {shipAmount.get(4)} </p><button onClick={() => handleChangeType(4)}>4x</button></div>
-            </div>
-            <button 
-                disabled={button}
-                onClick={() => startBattle(2)}
-            >Start Battle</button>
+            <p className={`${style.tip}`}>Tip : Press "R" to rotate ships</p>
         </>
     )
 }

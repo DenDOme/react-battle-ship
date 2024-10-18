@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import '../../assets/css/Cell.css'
+import style from '../../assets/css/Cell.module.css'
 
 function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, colorError, vertical, changeVertical, cellState}) {
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'none' });
@@ -54,7 +54,7 @@ function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, co
 
     return (
         <button
-            className='dataset-button'
+            className={`${style.datasetButton}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             style={hoverStyle}

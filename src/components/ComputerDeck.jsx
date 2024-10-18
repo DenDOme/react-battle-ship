@@ -1,8 +1,9 @@
 import ComputerCell from './Cells/ComputerCell';
 import Ship from "../scripts/Ship";
 import { useState } from 'react';
+import style from '../assets/css/DeckScreen.module.css';
 
-function ComputerDeck({player, round, checkWinner, changeRound}){
+function ComputerDeck({player, round, computer, checkWinner, changeRound}){
     const [board, setBoard] = useState([...player.board.map]);
     const mapWidth = player.board.mapx
 
@@ -16,7 +17,11 @@ function ComputerDeck({player, round, checkWinner, changeRound}){
 
     return(
         <>
-            <div className="deck-grid">
+            <div className={`${style.stats}`}>
+                <h2 className={`${style.name}`}>Computer</h2>
+                <p className={`${style.counter}`}>Missed Shots : {computer.board.missedShots}</p>
+            </div>
+            <div className={`${style.deckGrid}`}>
                 {player.board.map.map((cell, index) => {
                     const x = index % mapWidth; 
                     const y = Math.floor(index / mapWidth); 

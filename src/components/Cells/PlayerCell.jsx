@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import style from '../../assets/css/Cell.module.css'
 
 function PlayerCell({x, y, cellState}){
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'none' });
@@ -19,7 +20,7 @@ function PlayerCell({x, y, cellState}){
 
     return(
         <div
-            className="dataset-cell"
+            className={`${style.datasetCell}`}
             style={hoverStyle}
         >
         </div>

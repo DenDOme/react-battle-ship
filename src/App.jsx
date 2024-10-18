@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './assets/css/App.css'
 import Player from './scripts/player';
 import StartScreen from './components/StartScreen';
@@ -40,7 +40,7 @@ function App() {
     {mode === 0 && <StartScreen startGame={handleChangeMode}/>}
     {mode === 1 && <DeckScreen player={player} startBattle={handleChangeMode}/>}
     {mode === 2 && <GameScreen player={player} computer={computer} round={round} changeRound={handleChangeRound} endGame={handleChangeMode} changeWinner={handleChangeWinner}/>}
-    {mode === 3 && <EndScreen winner={winner} restartGame={resetData}/>}
+    {mode === 3 && <EndScreen player={player} computer={computer} winner={winner} restartGame={resetData}/>}
     </>
   );
 }

@@ -1,4 +1,4 @@
-.dataset-button {
+.datasetButton {
   width: 30px;
   height: 30px;
   display: flex;
@@ -15,8 +15,8 @@
   color: #000;
 }
 
-.dataset-cell{
-  height: 30px;
+.datasetCell{
+  height: 29px;
   display: block;
   border-right: 1px solid grey;
   border-bottom: 1px solid grey;
