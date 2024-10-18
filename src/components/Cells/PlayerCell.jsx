@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import style from '../../assets/css/Cell.module.css'
 
-function PlayerCell({x, y, cellState}){
+function PlayerCell({cellState}){
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'none' });
 
     useEffect(() => {
@@ -25,6 +26,10 @@ function PlayerCell({x, y, cellState}){
         >
         </div>
     )
+}
+
+PlayerCell.propTypes = {
+    cellState: PropTypes.string.isRequired
 }
 
 export default PlayerCell

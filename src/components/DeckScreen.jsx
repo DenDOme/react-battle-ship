@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types"
 import PlaceCell from "./Cells/PlaceCell";
-import Ship from "../scripts/Ship";
+import Ship from "../scripts/ship.js";
 import style from '../assets/css/DeckScreen.module.css'
 
 function DeckScreen({player, startBattle}){
@@ -229,7 +229,8 @@ DeckScreen.propTypes = {
           })
         ).isRequired,
         allSunked: PropTypes.bool.isRequired,     
-      }).isRequired,                             
+      }).isRequired, 
+      placeShip: PropTypes.func.isRequired                            
     }).isRequired,
     startBattle: PropTypes.func                               
 };

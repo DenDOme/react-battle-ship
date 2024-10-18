@@ -1,4 +1,4 @@
-import Ship from "./Ship";
+import Ship from "./ship.js";
 
 const EMPTY = 0;
 const BLAST_SHOT = 1;

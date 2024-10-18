@@ -1,4 +1,5 @@
 import PlayerDeck from '../components/PlayerDeck.jsx'
+import PropTypes from 'prop-types'
 import style from '../assets/css/DeckScreen.module.css'
 
 function EndScreen({player, computer, winner, restartGame}){
@@ -18,6 +19,13 @@ function EndScreen({player, computer, winner, restartGame}){
         </button>
         </>
     )
+}
+
+EndScreen.propTypes = {
+    winner: PropTypes.string.isRequired,
+    restartGame: PropTypes.func.isRequired,
+    player: PropTypes.object.isRequired,
+    computer: PropTypes.object.isRequired
 }
 
 export default EndScreen

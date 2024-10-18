@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import PlayerDeck from "./PlayerDeck";
 import ComputerDeck from "./ComputerDeck"
 import style from '../assets/css/DeckScreen.module.css'
@@ -20,6 +21,9 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
 
     const triggerChangeRound = () => {
         changeRound();
+        while(1) {
+            console.log(1);
+        }
     }
 
     return(
@@ -35,6 +39,23 @@ function GameScreen({player, computer, round, changeRound, endGame, changeWinner
             </div>
         </>
     )
+}
+
+GameScreen.propTypes = {
+    player: PropTypes.shape({
+        board: PropTypes.shape({
+          allSunked: PropTypes.bool.isRequired,     
+        }).isRequired, 
+    }).isRequired,
+    computer: PropTypes.shape({
+        board: PropTypes.shape({
+          allSunked: PropTypes.bool.isRequired,     
+        }).isRequired, 
+    }).isRequired,
+    round: PropTypes.bool.isRequired,
+    changeRound: PropTypes.func.isRequired,
+    endGame: PropTypes.func.isRequired,
+    changeWinner: PropTypes.func.isRequired
 }
 
 export default GameScreen

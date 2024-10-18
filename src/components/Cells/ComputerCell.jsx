@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import style from '../../assets/css/Cell.module.css'
 
 function ComputerCell({ x, y, cellState, hitShip, disabled }) {
@@ -29,6 +30,14 @@ function ComputerCell({ x, y, cellState, hitShip, disabled }) {
         >
         </button>
     );
+}
+
+ComputerCell.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    cellState: PropTypes.string.isRequired,
+    hitShip: PropTypes.func.isRequired,
+    disabled: PropTypes.bool.isRequired
 }
 
 export default ComputerCell;

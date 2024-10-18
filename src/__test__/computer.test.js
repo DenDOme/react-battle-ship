@@ -1,5 +1,4 @@
 import Computer from "../scripts/computer";
-import Ship from "../scripts/Ship";
 import Player from "../scripts/player";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 

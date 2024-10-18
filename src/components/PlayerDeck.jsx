@@ -1,14 +1,14 @@
 import PlayerCell from "./Cells/PlayerCell";
-import Ship from "../scripts/Ship";
+import PropTypes from "prop-types";
+import Ship from "../scripts/ship.js";
 import { useEffect, useState } from "react";
 import style from '../assets/css/DeckScreen.module.css'
 
 function PlayerDeck({player, round, computer, checkWinner, changeRound}){
     const [board, setBoard] = useState([...player.board.map]);
     const [isComputerTurn, setIsComputerTurn] = useState(false);
-    const mapWidth = player.board.mapx
-
     useEffect(() => {
+        board;
         setBoard([...player.board.map]);
     }, [player.board.map]);
 
@@ -41,8 +41,6 @@ function PlayerDeck({player, round, computer, checkWinner, changeRound}){
             </div>
             <div className={`${style.deckGrid}`}>
                 {player.board.map.map((cell, index) => {
-                    const x = index % mapWidth; 
-                    const y = Math.floor(index / mapWidth); 
                     let cellState = "";
                     if (cell === 0) {
                         cellState = "empty";
@@ -59,8 +57,6 @@ function PlayerDeck({player, round, computer, checkWinner, changeRound}){
                     return (
                         <PlayerCell
                             key={index} 
-                            x={x} 
-                            y={y} 
                             cellState={cellState}
                         />
                     );
@@ -68,6 +64,51 @@ function PlayerDeck({player, round, computer, checkWinner, changeRound}){
             </div>
         </>
     )
+}
+
+PlayerDeck.propTypes = {
+    round: PropTypes.bool,
+    checkWinner: PropTypes.func,
+    changeRound: PropTypes.func,
+    player: PropTypes.shape({
+        board: PropTypes.shape({
+            mapx: PropTypes.number.isRequired,        
+            mapy: PropTypes.number.isRequired,        
+            map: PropTypes.arrayOf(PropTypes.oneOfType([ 
+            PropTypes.number,                       
+            PropTypes.object,                       
+            ])).isRequired,                          
+            missedShots: PropTypes.number.isRequired, 
+            ships: PropTypes.arrayOf(
+            PropTypes.shape({
+                length: PropTypes.number.isRequired,
+                health: PropTypes.number.isRequired,
+                isSunked: PropTypes.bool.isRequired,  
+            })
+            ).isRequired,
+            allSunked: PropTypes.bool.isRequired,  
+        }).isRequired,
+    }).isRequired,
+    computer: PropTypes.shape({
+        board: PropTypes.shape({
+            mapx: PropTypes.number.isRequired,        
+            mapy: PropTypes.number.isRequired,        
+            map: PropTypes.arrayOf(PropTypes.oneOfType([ 
+            PropTypes.number,                       
+            PropTypes.object,                       
+            ])).isRequired,                          
+            missedShots: PropTypes.number.isRequired, 
+            ships: PropTypes.arrayOf(
+            PropTypes.shape({
+                length: PropTypes.number.isRequired,
+                health: PropTypes.number.isRequired,
+                isSunked: PropTypes.bool.isRequired,  
+            })
+            ).isRequired,
+            allSunked: PropTypes.bool.isRequired,  
+        }).isRequired,
+        hitOpponentShip: PropTypes.func,
+    })
 }
 
 export default PlayerDeck

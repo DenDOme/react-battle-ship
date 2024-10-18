@@ -1,6 +1,7 @@
-import ComputerCell from './Cells/ComputerCell';
-import Ship from "../scripts/Ship";
 import { useState } from 'react';
+import PropTypes from 'prop-types';
+import ComputerCell from './Cells/ComputerCell';
+import Ship from "../scripts/ship.js";
 import style from '../assets/css/DeckScreen.module.css';
 
 function ComputerDeck({player, round, computer, checkWinner, changeRound}){
@@ -12,6 +13,7 @@ function ComputerDeck({player, round, computer, checkWinner, changeRound}){
         if(!res) {changeRound()};
         checkWinner();
 
+        board;
         setBoard([...player.board.map]);
     }
 
@@ -52,6 +54,32 @@ function ComputerDeck({player, round, computer, checkWinner, changeRound}){
             </div>
         </>
     )
+}
+
+ComputerDeck.propTypes = {
+    round: PropTypes.bool.isRequired,
+    checkWinner: PropTypes.func.isRequired,
+    changeRound: PropTypes.func.isRequired,
+    player: PropTypes.shape({
+        board: PropTypes.shape({
+            mapx: PropTypes.number.isRequired,       
+            map: PropTypes.arrayOf(PropTypes.oneOfType([ 
+                PropTypes.number,                       
+                PropTypes.object,                       
+            ])).isRequired,  
+        }).isRequired,
+        hitShip: PropTypes.func.isRequired,
+    }).isRequired,
+    computer: PropTypes.shape({
+        board: PropTypes.shape({
+            mapx: PropTypes.number.isRequired,       
+            map: PropTypes.arrayOf(PropTypes.oneOfType([ 
+                PropTypes.number,                       
+                PropTypes.object,                       
+            ])).isRequired,
+            missedShots: PropTypes.number.isRequired,  
+        }).isRequired,
+    })
 }
 
 export default ComputerDeck

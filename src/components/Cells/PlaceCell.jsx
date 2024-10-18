@@ -28,7 +28,7 @@ function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, co
         else {
             setHoverStyle({ backgroundColor: 'white' });
         }
-    }, [greenLight, cellState]);
+    }, [colorError, greyLight, x, y, greenLight, cellState]);
 
     useEffect(() => {
         const handleKey = (e) => {
@@ -64,17 +64,17 @@ function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, co
     );
 }
 
-// Cell.propTypes = {
-//     x: PropTypes.number.isRequired,
-//     y: PropTypes.number.isRequired,
-//     placeShip: PropTypes.func.isRequired,
-//     greenLight: PropTypes.array.isRequired,
-//     greyLight: PropTypes.array.isRequired,
-//     changeGreenLight: PropTypes.func.isRequired,
-//     colorError: PropTypes.bool.isRequired,
-//     vertical: PropTypes.bool.isRequired,
-//     changeVertical: PropTypes.func.isRequired,
-//     cellState: PropTypes.string.isRequired  
-// };
+PlaceCell.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    placeShip: PropTypes.func.isRequired,
+    greenLight: PropTypes.array.isRequired,
+    greyLight: PropTypes.array.isRequired,
+    changeGreenLight: PropTypes.func.isRequired,
+    colorError: PropTypes.bool.isRequired,
+    vertical: PropTypes.bool.isRequired,
+    changeVertical: PropTypes.func.isRequired,
+    cellState: PropTypes.string.isRequired  
+};
 
 export default PlaceCell;
