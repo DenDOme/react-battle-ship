@@ -12,6 +12,10 @@ class Player{
     placeShip(lenght,x,y,vertical){
         return this.board.placeShip(lenght,x,y,vertical);
     }
+
+    deleteShip(x,y){
+        return this.board.deleteShip(x,y);
+    }
 }
 
 export default Player

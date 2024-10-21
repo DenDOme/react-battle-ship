@@ -36,6 +36,26 @@ class gameBoard {
         return true
     }
 
+    deleteShip(x,y){
+        const ship = this.map[x + y * this.mapy];
+        
+        if(!ship){
+            return false
+        }
+
+        const findedShip = this.ships.findIndex((element) => {
+            return element === ship;
+        })
+        this.ships.splice(findedShip, 1);
+
+        for(let i = 0 ; i < ship.coords.length ; i++){
+            const [shipX,shipY] = ship.coords[i];
+            this.map[shipX + (shipY * this.mapx)] = 0;
+        }
+
+        return true;
+    }
+
     hitShip(x,y){
         if(this.map[x+(y*this.mapy)] == EMPTY){
             this.missedShots++;

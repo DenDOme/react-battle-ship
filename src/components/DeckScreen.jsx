@@ -31,6 +31,26 @@ function DeckScreen({player, startBattle}){
         setVertical(!vertical)
     }
 
+    const handleRemoveShip = (e,x,y) => {
+        e.preventDefault();
+        const ship = player.board.map[x + (y * player.board.mapx)];
+        const res = player.deleteShip(x,y);
+        if(res) {
+            setShipAmount((prevHash) => {
+                const newHash = new Map(prevHash);
+                const currentHash = newHash.get(ship.length) || 0;
+                newHash.set(ship.length, currentHash + 1);
+                return newHash;
+            });
+            setPlacedGreen((prevPlacedGreen) => {
+                const coordsToRemove = ship.coords;
+                return prevPlacedGreen.filter(([greenX, greenY]) => 
+                    !coordsToRemove.some(([shipX, shipY]) => shipX === greenX && shipY === greenY)
+                );
+            })
+        }
+    }
+
     const handlePlaceShip = (x,y) => {
         if((errorHorizontal && !vertical)|| (errorVertical && vertical)){
             return false;
@@ -150,7 +170,8 @@ function DeckScreen({player, startBattle}){
                                 key={index} 
                                 x={x} 
                                 y={y} 
-                                placeShip={handlePlaceShip} 
+                                placeShip={handlePlaceShip}
+                                removeShip={handleRemoveShip} 
                                 cellState={cellState}
                                 changeGreenLight={handleGreenLight} 
                                 greenLight={vertical ? greenVertical : greenHorizontal} 

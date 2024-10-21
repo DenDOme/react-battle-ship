@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import style from '../../assets/css/Cell.module.css'
 
-function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, colorError, vertical, changeVertical, cellState}) {
+function PlaceCell({x, y, placeShip, removeShip, greenLight, greyLight, changeGreenLight, colorError, vertical, changeVertical, cellState}) {
     const [hoverStyle, setHoverStyle] = useState({ backgroundColor: 'none' });
 
     useEffect(() => {
@@ -58,7 +58,8 @@ function PlaceCell({x, y, placeShip, greenLight, greyLight, changeGreenLight, co
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             style={hoverStyle}
-            onClick={() => placeShip(x, y)}
+            onClick={() => placeShip(x,y)}
+            onContextMenu={(e) => removeShip(e,x,y)}
         >
         </button>
     );

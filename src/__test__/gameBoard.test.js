@@ -154,4 +154,37 @@ describe('check gameBoard', () => {
         expect(ship.isSunked).toBe(true);
         expect(board.allSunked).toBe(true);
     })
+
+    test('delete ship on right click', () => {
+        const length = 3;
+        const x = 0;
+        const y = 0;
+        const vertical = false;
+        let res = board.placeShip(length,x,y,vertical);
+        expect(res).toBe(true);
+
+        const ship = board.ships[0];
+        expect(ship.coords).toEqual([ [ 0, 0 ], [ 1, 0 ], [ 2, 0 ] ])
+
+        res = board.deleteShip(x,y);
+        expect(res).toBe(true);
+        expect(board.map[x + 0 + (y * board.mapx)]).toBe(0)
+        expect(board.map[x + 1 + (y * board.mapx)]).toBe(0)
+        expect(board.map[x + 2 + (y * board.mapx)]).toBe(0)
+    })
+
+    test('delete ship on place where there isnt ship', () => {
+        const length = 3;
+        const x = 0;
+        const y = 0;
+        const vertical = false;
+        let res = board.placeShip(length,x,y,vertical);
+        expect(res).toBe(true);
+
+        const ship = board.ships[0];
+        expect(ship.coords).toEqual([ [ 0, 0 ], [ 1, 0 ], [ 2, 0 ] ])
+
+        res = board.deleteShip(x + 7,y + 7);
+        expect(res).toBe(false);
+    })
 })
